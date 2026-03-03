@@ -690,7 +690,10 @@ impl<'a> BlobWriter<'a> {
         Ok(Self {
             hash: Hasher::new(MessageDigest::sha256())?,
             // FIXME add ability to choose filename after completion
-            target: Some(BufWriter::new(cap_tempfile::TempFile::new(ocidir)?)),
+            target: Some(BufWriter::with_capacity(
+                64 * 1024,
+                cap_tempfile::TempFile::new(ocidir)?,
+            )),
             size: 0,
         })
     }
